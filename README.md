@@ -1,7 +1,7 @@
 # Stable Diffusion web UI
+## lshqqytiger/stable-diffusion-webui-directml
 A browser interface based on Gradio library for Stable Diffusion.
 
-![](screenshot.png)
 
 ## Features
 [Detailed feature showcase with images](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Features):
