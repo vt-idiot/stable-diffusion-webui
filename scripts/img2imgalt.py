@@ -213,4 +213,3 @@ class Script(scripts.Script):
         processed = processing.process_images(p)
 
         return processed
-

@@ -30,7 +30,7 @@ class FormRow(gr.Row, gr.components.FormComponent):
 
 class FormGroup(gr.Group, gr.components.FormComponent):
     """Same as gr.Row but fits inside gradio forms"""
-
+   
     def get_block_name(self):
         return "group"
 
@@ -56,3 +56,6 @@ class DropdownMulti(gr.Dropdown):
 
     def get_block_name(self):
         return "dropdown"
+
+    
+   

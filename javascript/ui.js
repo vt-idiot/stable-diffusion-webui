@@ -85,7 +85,7 @@ function switch_to_extras(){
 function get_tab_index(tabId){
     var res = 0
 
-    gradioApp().getElementById(tabId).querySelector('div').querySelectorAll('button').forEach(function(button, i){
+    gradioApp().getElementById(tabId).querySelector('div').querySelectorAll('button').forEach(function(button, i){		
         if(button.className.indexOf('bg-white') != -1)
             res = i
     })
@@ -277,6 +277,150 @@ onUiUpdate(function(){
             })
         }
     }
+	
+	
+	
+	/* 	
+	^ matches the start
+	* matches any position
+	$ matches the end
+	*/
+	
+	/* auto grow textarea */
+	gradioApp().querySelectorAll('[id $= "_prompt"] textarea').forEach(function (elem) {
+		elem.style.boxSizing = 'border-box';
+		var offset = elem.offsetHeight - elem.clientHeight;
+		elem.addEventListener('input', function (e) {
+			e.target.style.minHeight = 'auto';
+			e.target.style.minHeight = e.target.scrollHeight + offset + 'px';
+		});
+		
+		elem.addEventListener('focus', function (e) {
+			e.target.style.minHeight = 'auto';
+			e.target.style.minHeight = e.target.scrollHeight + offset + 'px';
+		});
+	});
+	
+	
+	/* resizable split view */			
+	
+	const resizeEvent = window.document.createEvent('UIEvents'); 
+	resizeEvent.initUIEvent('resize', true, false, window, 0); 	
+
+	gradioApp().querySelectorAll('[id $="2img_splitter"]').forEach((elem) => {
+		
+		elem.addEventListener("mousedown", function(e) {	
+
+			e.preventDefault();
+			
+			let resizer = e.currentTarget;
+			let container = resizer.parentElement;
+			
+			let flexDir = window.getComputedStyle(container).getPropertyValue('flex-direction');
+		
+			let leftSide = resizer.previousElementSibling;
+			let rightSide = resizer.nextElementSibling;
+			let dir = 1.0;
+			
+			if(flexDir == "row-reverse"){
+				dir = -1.0;				
+			}
+
+			let x = e.clientX;
+			let y = e.clientY;
+			let leftWidth = leftSide.getBoundingClientRect().width;		
+			
+
+			
+			function mouseMoveHandler(e) {		
+				resizer.style.cursor = 'col-resize';
+				container.style.cursor = 'col-resize';
+
+				const dx = (e.clientX - x)*dir;
+				const dy = (e.clientY - y)*dir;
+
+				const newLeftWidth = ((leftWidth + dx) * 100) / container.getBoundingClientRect().width;
+				leftSide.style.flexBasis  = `${newLeftWidth}%`;
+				leftSide.style.userSelect = 'none';
+				leftSide.style.pointerEvents = 'none';
+				rightSide.style.userSelect = 'none';
+				rightSide.style.pointerEvents = 'none';
+				window.dispatchEvent(resizeEvent);		
+			}
+
+			function mouseUpHandler() {
+				resizer.style.removeProperty('cursor');
+				container.style.removeProperty('cursor');
+				leftSide.style.removeProperty('user-select');
+				leftSide.style.removeProperty('pointer-events');
+				rightSide.style.removeProperty('user-select');
+				rightSide.style.removeProperty('pointer-events');
+				container.removeEventListener('mousemove', mouseMoveHandler);
+				container.removeEventListener('mouseup', mouseUpHandler);
+				window.dispatchEvent(resizeEvent);				
+			}
+			
+			container.addEventListener('mousemove', mouseMoveHandler);
+			container.addEventListener('mouseup', mouseUpHandler);		
+	
+		})
+		
+		let flex_reverse = false;
+		elem.addEventListener("dblclick", function(e) {	
+			flex_reverse = !flex_reverse;	
+			e.preventDefault();
+			
+			let resizer = e.currentTarget;
+			let container = resizer.parentElement;			
+			//let flexDir = window.getComputedStyle(container).getPropertyValue('flex-direction');
+
+			if(flex_reverse){
+				container.style.flexDirection = 'row-reverse';			
+			}else{
+				container.style.flexDirection = 'row';	
+			}
+		
+		})
+		
+		
+
+	})
+	
+	// mobile nav menu
+	const tabs_menu = gradioApp().querySelector('#tabs > div:first-child');
+	const nav_menu = gradioApp().querySelector('#nav_menu');
+	const gcontainer = gradioApp().querySelector('.mx-auto.container');
+	
+	let menu_open = false;
+	function toggleNavMenu(e) {
+		menu_open = !menu_open;	
+		e.preventDefault();
+        e.stopPropagation();
+		
+		if(menu_open){
+			tabs_menu.classList.add("open");
+			nav_menu.classList.add("fixed");
+			gcontainer.addEventListener('click', toggleNavMenu);
+		
+
+		}else{
+			tabs_menu.classList.remove("open");
+			nav_menu.classList.remove("fixed");
+			gcontainer.removeEventListener('click', toggleNavMenu);
+			
+		}
+		
+		
+	}
+	
+
+    nav_menu.addEventListener('click', toggleNavMenu);
+	
+	//const doc = document.getElementsByTagName('gradio-app')[0].shadowRoot;
+	
+
+
+	
 })
 
 onOptionsChanged(function(){
@@ -316,7 +460,8 @@ function update_token_counter(button_id) {
 }
 
 function restart_reload(){
-    document.body.innerHTML='<h1 style="font-family:monospace;margin-top:20%;color:lightgray;text-align:center;">Reloading...</h1>';
+	document.body.style.backgroundColor = "#1a1a1a";
+    document.body.innerHTML='<h1 style="font-family:monospace;margin-top:20%;color:lightgray;text-align:center;">Reloading...</h1>';	
     setTimeout(function(){location.reload()},2000)
 
     return []
@@ -336,3 +481,5 @@ function selectCheckpoint(name){
     desiredCheckpointName = name;
     gradioApp().getElementById('change_checkpoint').click()
 }
+
+
