@@ -1,7 +1,67 @@
-# Stable Diffusion web UI
-A browser interface based on Gradio library for Stable Diffusion.
+# Stable Diffusion web UI-UX 
+Not just a browser interface based on Gradio library for Stable Diffusion.
+A pixel perfect design, mobile friendly, customizable interface that adds accessibility, ease of use and extended functionallity to the stable diffusion web ui.
+Enjoy!
 
-![](screenshot.png)
+
+Default theme
+
+![anapnoe_uiux](https://user-images.githubusercontent.com/124302297/227973574-6003142d-0c7c-41c6-9966-0792a94549e9.png)
+
+## Features and to do list of ui-ux
+- [x] resizable viewport
+- [x] switchable viewports (DoubleClick on the split handler to swap views) option in settings for default position
+- [x] mobile navigation
+- [x] top header tabs (option setting)
+- [x] hidden tabs (option setting) no need to restart this is a different implementation
+- [x] drag and drop reordable quick settings offcanvas aside view
+- [x] drag and drop images to txt2img and img2img and import generation info parameters along with a preview image
+- [x] ignore - remove overrides when import [multiselect] (option setting)
+- [x] resizable cards for extra networks and number of rows (option setting)
+- [x] lazy loading alternative offcanvas aside view for extra networks (option setting)
+- [x] live preview image fit method (option setting)
+- [x] generated image fit method (option setting)
+- [x] max resolution output for txt2img and img2img (option setting)
+- [x] performant dispatch for gradio's range slider and input number field issue: https://github.com/gradio-app/gradio/issues/3204 (option setting) latest update uses only one instance clone to mediate for the release event
+- [x] ticks input range sliders (option setting)
+- [x] pacman preloader unified colors on reload ui
+- [x] frame border animation when generating images
+- [x] progress bar on top of the page always visible (when scroll for mobile)
+- [x] remix icons 
+- [ ] small arrows next to icons sent to inpaint, extras, img2img etc  
+- [x] style theme configurator extension to customize every aspect of theme in real time with cool global functions to change the hue / saturation / brightness or invert the theme colors
+- [x] pan and zoom in out functionality for sketch, inpaint, inpaint sketch
+- [x] fullscreen support for sketch, inpaint, inpaint sketch  
+- [ ] component gallery navigate to previous generations inside the txt2img, img2img interface
+- [ ] and auto load the current generation settings 
+- [x] better lightbox with zoom in-out mobile gestures support etc.. 
+- [ ] credits/about page display all 300+ contributors so far inside the UI 
+
+Quick Settings aside off-canvas view - drag and drop to custom sort your settings
+
+![anapnoe_uiux_quicksettings](https://user-images.githubusercontent.com/124302297/227967695-f8bb01b5-5cc9-4238-80dd-06e261378d6e.png)
+
+
+Extra Networks aside off-canvas view
+
+![anapnoe_uiux_extra_networks](https://user-images.githubusercontent.com/124302297/227968001-20eab8f5-da91-4a11-9fe0-230fec4ba720.png)
+
+
+Detail img2img sketch view 
+
+![anapnoe_uiux_sketch](https://user-images.githubusercontent.com/124302297/227973727-084da8e0-931a-4c62-ab73-39e988fd4523.png)
+
+
+Theme Configurator - aside off-canvas view 
+
+![anapnoe_uiux_theme_config](https://user-images.githubusercontent.com/124302297/227967844-45063edb-eb40-4224-9666-f506d21d7780.png)
+
+
+Mobile 395px width
+
+![anapnoe_uiux_mobile](https://user-images.githubusercontent.com/124302297/227987709-36231d30-e6da-424a-8930-cc0c55a0b979.png)
+
+
 
 ## Features
 [Detailed feature showcase with images](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Features):
@@ -100,14 +160,14 @@ Alternatively, use online services (like Google Colab):
 
 - [List of Online Services](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Online-Services)
 
-### Automatic Installation on Windows
-1. Install [Python 3.10.6](https://www.python.org/downloads/windows/), checking "Add Python to PATH"
-2. Install [git](https://git-scm.com/download/win).
-3. Download the stable-diffusion-webui repository, for example by running `git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git`.
-4. Place stable diffusion checkpoint (`model.ckpt`) in the `models/Stable-diffusion` directory (see [dependencies](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Dependencies) for where to get it).
-5. Run `webui-user.bat` from Windows Explorer as normal, non-administrator, user.
+### Installation on Windows
 
-### Automatic Installation on Linux
+1. Install [Python 3.10.6](https://www.python.org/downloads/release/python-3106/) (Newer version of Python does not support torch), checking "Add Python to PATH".
+2. Install [git](https://git-scm.com/download/win).
+3. Download the stable-diffusion-webui-ux repository, for example by running `git clone https://github.com/anapnoe/stable-diffusion-webui-ux.git`.
+4. Run `webui-user.bat` from Windows Explorer as normal, non-administrator, user.
+
+### Installation on Linux
 1. Install the dependencies:
 ```bash
 # Debian-based:
@@ -117,17 +177,19 @@ sudo dnf install wget git python3
 # Arch-based:
 sudo pacman -S wget git python3
 ```
-2. To install in `/home/$(whoami)/stable-diffusion-webui/`, run:
+2. Navigate to the directory you would like the webui to be installed and execute the following command:
 ```bash
-bash <(wget -qO- https://raw.githubusercontent.com/AUTOMATIC1111/stable-diffusion-webui/master/webui.sh)
+bash <(wget -qO- https://raw.githubusercontent.com/anapnoe/stable-diffusion-webui-ux/master/webui.sh)
 ```
-
+3. Run `webui.sh`.
+4. Check `webui-user.sh` for options.
 ### Installation on Apple Silicon
 
 Find the instructions [here](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Installation-on-Apple-Silicon).
+and replace the path in step 3 with `git clone https://github.com/anapnoe/stable-diffusion-webui-ux`
 
 ## Contributing
-Here's how to add code to this repo: [Contributing](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Contributing)
+Here's how to add code to the original repo: [Contributing](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Contributing)
 
 ## Documentation
 The documentation was moved from this README over to the project's [wiki](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki).
@@ -158,5 +220,6 @@ Licenses for borrowed code can be found in `Settings -> Licenses` screen, and al
 - Sampling in float32 precision from a float16 UNet - marunine for the idea, Birch-san for the example Diffusers implementation (https://github.com/Birch-san/diffusers-play/tree/92feee6)
 - Instruct pix2pix - Tim Brooks (star), Aleksander Holynski (star), Alexei A. Efros (no star) - https://github.com/timothybrooks/instruct-pix2pix
 - Security advice - RyotaK
+- UniPC sampler - Wenliang Zhao - https://github.com/wl-zhao/UniPC
 - Initial Gradio script - posted on 4chan by an Anonymous user. Thank you Anonymous user.
 - (You)

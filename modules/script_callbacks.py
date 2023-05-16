@@ -29,7 +29,7 @@ class ImageSaveParams:
 
 
 class CFGDenoiserParams:
-    def __init__(self, x, image_cond, sigma, sampling_step, total_sampling_steps):
+    def __init__(self, x, image_cond, sigma, sampling_step, total_sampling_steps, text_cond, text_uncond):
         self.x = x
         """Latent image representation in the process of being denoised"""
         
@@ -42,6 +42,24 @@ class CFGDenoiserParams:
         self.sampling_step = sampling_step
         """Current Sampling step number"""
         
+        self.total_sampling_steps = total_sampling_steps
+        """Total number of sampling steps planned"""
+        
+        self.text_cond = text_cond
+        """ Encoder hidden states of text conditioning from prompt"""
+        
+        self.text_uncond = text_uncond
+        """ Encoder hidden states of text conditioning from negative prompt"""
+
+
+class CFGDenoisedParams:
+    def __init__(self, x, sampling_step, total_sampling_steps):
+        self.x = x
+        """Latent image representation in the process of being denoised"""
+
+        self.sampling_step = sampling_step
+        """Current Sampling step number"""
+
         self.total_sampling_steps = total_sampling_steps
         """Total number of sampling steps planned"""
 
@@ -68,12 +86,14 @@ callback_map = dict(
     callbacks_before_image_saved=[],
     callbacks_image_saved=[],
     callbacks_cfg_denoiser=[],
+    callbacks_cfg_denoised=[],
     callbacks_before_component=[],
     callbacks_after_component=[],
     callbacks_image_grid=[],
     callbacks_infotext_pasted=[],
     callbacks_script_unloaded=[],
     callbacks_before_ui=[],
+    callbacks_on_reload=[],
 )
 
 
@@ -88,6 +108,14 @@ def app_started_callback(demo: Optional[Blocks], app: FastAPI):
             c.callback(demo, app)
         except Exception:
             report_exception(c, 'app_started_callback')
+
+
+def app_reload_callback():
+    for c in callback_map['callbacks_on_reload']:
+        try:
+            c.callback()
+        except Exception:
+            report_exception(c, 'callbacks_on_reload')
 
 
 def model_loaded_callback(sd_model):
@@ -148,6 +176,14 @@ def cfg_denoiser_callback(params: CFGDenoiserParams):
             c.callback(params)
         except Exception:
             report_exception(c, 'cfg_denoiser_callback')
+
+
+def cfg_denoised_callback(params: CFGDenoisedParams):
+    for c in callback_map['callbacks_cfg_denoised']:
+        try:
+            c.callback(params)
+        except Exception:
+            report_exception(c, 'cfg_denoised_callback')
 
 
 def before_component_callback(component, **kwargs):
@@ -227,6 +263,11 @@ def on_app_started(callback):
     add_callback(callback_map['callbacks_app_started'], callback)
 
 
+def on_before_reload(callback):
+    """register a function to be called just before the server reloads."""
+    add_callback(callback_map['callbacks_on_reload'], callback)
+
+
 def on_model_loaded(callback):
     """register a function to be called when the stable diffusion model is created; the model is
     passed as an argument; this function is also called when the script is reloaded. """
@@ -281,6 +322,14 @@ def on_cfg_denoiser(callback):
         - params: CFGDenoiserParams - parameters to be passed to the inner model and sampling state details.
     """
     add_callback(callback_map['callbacks_cfg_denoiser'], callback)
+
+
+def on_cfg_denoised(callback):
+    """register a function to be called in the kdiffussion cfg_denoiser method after building the inner model inputs.
+    The callback is called with one argument:
+        - params: CFGDenoisedParams - parameters to be passed to the inner model and sampling state details.
+    """
+    add_callback(callback_map['callbacks_cfg_denoised'], callback)
 
 
 def on_before_component(callback):
